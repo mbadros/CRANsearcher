@@ -60,10 +60,10 @@ CRANsearcher <- function(){
       fillCol(
         flex=c(1,6),
         fillRow(
-          flex=c(1,3,2),
-          checkboxInput("installed", "Include only installed packages?", value = FALSE, width = "60%"),
+          flex=c(3,2,1),
           textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)", width="60%"),
-          selectInput("dates","Last release date range",choices=c("1 month","3 months","6 months","12 months","All time"), selected="All time", width="60%")),
+          selectInput("dates","Last release date range",choices=c("1 month","3 months","6 months","12 months","All time"), selected="All time", width="60%"),
+          checkboxInput("installed", "Include only installed packages?", value = FALSE, width = "60%")),
         div(DT::dataTableOutput("table"), style = "font-size: 90%")
       )
     ),
@@ -114,7 +114,7 @@ CRANsearcher <- function(){
 
     a_sub1 <- reactive({
 
-      dat <- crandb$a
+      dat <- crandb$a %>% filter(Installed == input$Installed)
 
       if(input$dates=="All time"){
         return(dat)
