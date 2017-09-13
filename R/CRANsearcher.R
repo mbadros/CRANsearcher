@@ -63,8 +63,7 @@ CRANsearcher <- function(){
           flex=c(4,2,1),
           textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)", width="90%"),
           selectInput("dates","Last release date range",choices=c("1 month","3 months","6 months","12 months","All time"), selected="All time", width="80%"),
-          checkboxInput("installed", "Include only installed packages?", value = FALSE, width = 50%)
-        ),
+          checkboxInput("installed", "Include only installed packages?", value = FALSE, width = "50%")),
         div(DT::dataTableOutput("table"), style = "font-size: 90%")
       )
     ),
