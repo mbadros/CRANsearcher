@@ -60,9 +60,10 @@ CRANsearcher <- function(){
       fillCol(
         flex=c(1,6),
         fillRow(
-          flex=c(2,1),
+          flex=c(4,2,1),
           textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)", width="90%"),
-          selectInput("dates","Last release date range",choices=c("1 month","3 months","6 months","12 months","All time"), selected="All time", width="80%")
+          selectInput("dates","Last release date range",choices=c("1 month","3 months","6 months","12 months","All time"), selected="All time", width="80%"),
+          checkboxInput("installed", "Installed packages only", width="90%")
         ),
         div(DT::dataTableOutput("table"), style = "font-size: 90%")
       )
@@ -106,7 +107,7 @@ CRANsearcher <- function(){
                                '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
               rename(`Last release`=Published)
 
-      crandb$a <- a
+      crandb$a <- ifelse(input$installed, a %>% filter("Installed" == TRUE), a)
       crandb$snapshot_date <- format(a$snapshot_date, "%m/%d/%y")
 
     }
