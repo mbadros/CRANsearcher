@@ -15,7 +15,8 @@ getPackages <- function() {
   on.exit(close(con))
   db <- readRDS(gzcon(con))
   rownames(db) <- NULL
-  db[, c("Package", "Version","Title","Description","Published","License")]
+  db <- cbind(db, Installed = db[ , "Package"] %in% installed.packages()[ , 1])
+  db[, c("Package", "Version", "Installed", "Title","Description","Published","License")]
 }
 
 
@@ -88,10 +89,10 @@ CRANsearcher <- function(){
             mutate(Published = as.Date(Published),
                    months_since = lubridate::interval(Published, Sys.Date())/months(1),
                    name = Package %>% as.character,
-                  Package = paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
-                                   '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
-                                   '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
-           rename(`Last release`=Published)
+                   Package = paste0('<a href="','https://cran.r-project.org/web/packages/',Package,'" style="color:#000000">',Package,'</a>',
+                                    '<sub> <a href="','http://www.rpackages.io/package/',Package,'" style="color:#000000">',1,'</a></sub>',
+                                    '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
+        rename(`Last release`=Published)
 
       crandb$snapshot_date <- format(Sys.Date(), "%m/%d/%y")
 
@@ -161,7 +162,7 @@ CRANsearcher <- function(){
       if(identical(search_d(), character(0)) || nchar(search_d())<2){
         if(!is.null(crandb$a)){
           if (input$dates=="All time"){
-            DT::datatable(crandb$a[c(1:10),c(1:6)],
+            DT::datatable(crandb$a[c(1:10),c(1:7)],
                           rownames = FALSE,
                           escape = FALSE,
                           style="bootstrap",
@@ -171,7 +172,7 @@ CRANsearcher <- function(){
                           options= list(dom = 'Btip',
                                         buttons = I('colvis')))
           } else{
-            DT::datatable(a_sub1()[,c(1:6)],
+            DT::datatable(a_sub1()[,c(1:7)],
                           rownames = FALSE,
                           escape = FALSE,
                           style="bootstrap",
@@ -185,7 +186,7 @@ CRANsearcher <- function(){
           return()
         }
       } else{
-        DT::datatable(a_sub2()[,c(1:6)],
+        DT::datatable(a_sub2()[,c(1:7)],
                        rownames = FALSE,
                        escape = FALSE,
                        style="bootstrap",
