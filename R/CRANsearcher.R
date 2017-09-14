@@ -107,9 +107,7 @@ CRANsearcher <- function(){
                                '<sub> <a href="','http://rdrr.io/cran/',Package,'" style="color:#000000">',2,'</a></sub>')) %>%
               rename(`Last release`=Published)
 
-      crandb$a <- ifelse(input$installed, a %>% filter("Installed" == TRUE), a)
       crandb$snapshot_date <- format(a$snapshot_date, "%m/%d/%y")
-
     }
 
 
@@ -262,6 +260,4 @@ CRANsearcher <- function(){
   viewer <- dialogViewer("Search packages in CRAN database based on keywords", width = 1200, height = 900)
   runGadget(ui, server, viewer = viewer)
 }
-
-
 
