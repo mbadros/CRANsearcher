@@ -242,6 +242,12 @@ CRANsearcher <- function(){
      }
    })
 
+   observeEvent(input$installed, {
+     if(input$installed) {
+       a <- a %>% filter("Installed" == TRUE)
+     }
+   })
+
     observeEvent(input$install, {
       rows <- input$table_rows_selected
       pkgs <- as.vector(a_sub2()[rows, "name"])
