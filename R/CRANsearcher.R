@@ -14,8 +14,9 @@ getPackages <- function() {
   }
   on.exit(close(con))
   db <- readRDS(gzcon(con))
+  db <- cbind(db, Installed = db[ , "Package"] %in% installed.packages()[ , 1])
   rownames(db) <- NULL
-  db[, c("Package", "Version","Title","Description","Published","License")]
+  db[, c("Package", "Installed", "Version","Title","Description","Published","License")]
 }
 
 
@@ -59,7 +60,8 @@ CRANsearcher <- function(){
       fillCol(
         flex=c(1,6),
         fillRow(
-          flex=c(2,1),
+          flex=c(1,2,1),
+          checkboxInput("installed", "Installed packages only", value = F, width = "60%"),
           textInput("search","Enter search terms separated by commas (e.g. latent class, longitudinal)", width="90%"),
           selectInput("dates","Last release date range",choices=c("1 month","3 months","6 months","12 months","All time"), selected="All time", width="80%")
         ),
@@ -153,6 +155,12 @@ CRANsearcher <- function(){
           data.frame
       }
       return(s)
+    })
+
+    a_sub3 <- reactive({
+
+      if(input$installed) {
+        a <- a %>% filter(Installed == TRUE)}
     })
 
 
